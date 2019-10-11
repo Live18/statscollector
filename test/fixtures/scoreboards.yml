@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  home_team_score: 1
+  away_team_score: 1
+  home_team_timeouts_remaining: 1
+  away_team_timeouts_remining: 1
+  period: 1
+  home_team_fouls: 1
+  away_team_fouls: 1
+  posession_arrow: MyString
+
+two:
+  home_team_score: 1
+  away_team_score: 1
+  home_team_timeouts_remaining: 1
+  away_team_timeouts_remining: 1
+  period: 1
+  home_team_fouls: 1
+  away_team_fouls: 1
+  posession_arrow: MyString

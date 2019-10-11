@@ -1,0 +1,44 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Home team score:</strong>
+  <%= @scoreboard.home_team_score %>
+</p>
+
+<p>
+  <strong>Away team score:</strong>
+  <%= @scoreboard.away_team_score %>
+</p>
+
+<p>
+  <strong>Home team timeouts remaining:</strong>
+  <%= @scoreboard.home_team_timeouts_remaining %>
+</p>
+
+<p>
+  <strong>Away team timeouts remining:</strong>
+  <%= @scoreboard.away_team_timeouts_remining %>
+</p>
+
+<p>
+  <strong>Period:</strong>
+  <%= @scoreboard.period %>
+</p>
+
+<p>
+  <strong>Home team fouls:</strong>
+  <%= @scoreboard.home_team_fouls %>
+</p>
+
+<p>
+  <strong>Away team fouls:</strong>
+  <%= @scoreboard.away_team_fouls %>
+</p>
+
+<p>
+  <strong>Posession arrow:</strong>
+  <%= @scoreboard.posession_arrow %>
+</p>
+
+<%= link_to 'Edit', edit_scoreboard_path(@scoreboard) %> |
+<%= link_to 'Back', scoreboards_path %>
