@@ -1,23 +1,69 @@
 
-<p>
-  <strong>Name:</strong>
+<h2>
   <%= @team.name %>
-</p>
+</h2>
 
-<p>
-  <strong>Logo:</strong>
-  <%= @team.logo %>
-</p>
+<div style="margin: 20px 0px; border-bottom: 1px solid lightgrey">
+  <p>
+    <strong>Logo:</strong>
+    <%= @team.logo %>
+  </p>
 
-<p>
-  <strong>Mascot:</strong>
-  <%= @team.mascot %>
-</p>
+  <p>
+    <strong>Mascot:</strong>
+    <%= @team.mascot %>
+  </p>
 
-<p>
-  <strong>Coach:</strong>
-  <%= @team.coach_id %>
-</p>
+  <%= link_to 'Edit', edit_team_path(@team) %> |
+  <%= link_to 'Back', teams_path %>
+</div>
 
-<%= link_to 'Edit', edit_team_path(@team) %> |
-<%= link_to 'Back', teams_path %>
+<div style="margin-top: 50px">
+  <div>
+    <h5>Coaches</h5>
+    <% if @is_coach %>
+      <%= link_to 'Add A Coach', team_invite_coach_path(@team.id) %>
+    <% end %>
+  <div>
+    <table class='table' style="margin-top: 20px">
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th colspan="3"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @coach_associations.each do |ca| %>
+          <tr>
+            <td><%= ca.user.email %></td>
+            <td><%= link_to 'Destroy', user_association_path(ca.id), :style => 'float-right',  method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <div>
+    <h5 style="margin-top: 50px">Players</h5>
+    <% if @is_coach %>
+      <%= link_to 'Add Players', team_invite_player_path(@team.id) %>
+    <% end %>
+  </div>
+    <table class='table' style="margin-top: 20px">
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th colspan="3"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @player_associations.each do |pa| %>
+          <tr>
+            <td><%= pa.user.email %></td>
+            <td><%= link_to 'Destroy', user_association_path(pa.id), :style => 'float-right', method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>  
+  </div>
+  
+</div>
+

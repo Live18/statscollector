@@ -1,5 +1,5 @@
 <%= form_with scope: :user, url: team_invite_player_path(team.id) do |form| %>
-  <% if player.errors.any? %>
+  <% if user.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(player.errors.count, "error") %> prohibited this player from being saved:</h2>
 

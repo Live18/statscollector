@@ -54,9 +54,10 @@ class UserAssociationsController < ApplicationController
   # DELETE /user_associations/1
   # DELETE /user_associations/1.json
   def destroy
+    team_id = @user_association.team_id
     @user_association.destroy
     respond_to do |format|
-      format.html { redirect_to user_associations_url, notice: 'User association was successfully destroyed.' }
+      format.html { redirect_to team_url(team_id), notice: 'User association was successfully destroyed.' }
       format.json { head :no_content }
     end
   end

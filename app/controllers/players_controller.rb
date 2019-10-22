@@ -1,5 +1,7 @@
 class PlayersController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_player, only: [:show, :edit, :update, :destroy]
+  before_action :set_team_invite_player, only: [:new_player, :create_player]
 
   # GET /players
   # GET /players.json
@@ -10,6 +12,7 @@ class PlayersController < ApplicationController
   # GET /players/1
   # GET /players/1.json
   def show
+    @player_associations = UserAssociation.where(:id => @team)
   end
 
   # GET /players/new
@@ -59,6 +62,18 @@ class PlayersController < ApplicationController
       format.html { redirect_to players_url, notice: 'Player was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def new_player
+    @user = User.new
+  end
+
+  def create_player
+    temp_password = SecureRandom.uuid
+    @user = User.create(player_params.merge(:password => temp_password))
+    @player_asociation = UserAssociation.create(:team_id => @team.id, :user_id => @user.id, :role => 'player')
+    UserMailer.with(team: @team, user: @user.id, :temp_password => temp_password).invitation_email.deliver_now
+    redirect_to @team
   end
 
   private

@@ -13,4 +13,20 @@
  *= require_tree .
  *= require_self
  */
+
 @import "bootstrap";
+
+
+html,
+body {
+  overflow-x: hidden;
+}
+
+.navbar-light .navbar-nav .nav-link:focus, .navbar-light .navbar-nav:hover .nav-link:hover {
+    color: #ccc !important;
+    background-color: white !important;
+}
+
+a:hover {
+  background-color: white; 
+}

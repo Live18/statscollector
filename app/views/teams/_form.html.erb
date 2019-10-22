@@ -11,27 +11,23 @@
     </div>
   <% end %>
 
-  <div class="field">
+  <div class="field form-group">
     <%= form.label :name %>
-    <%= form.text_field :name %>
+    <%= form.text_field :name, :class => 'form-control' %>
   </div>
 
   <div class="field">
     <%= form.label :logo %>
-    <%= form.text_field :logo %>
+    <%= form.text_field :logo, :class => 'form-control' %>
   </div>
 
   <div class="field">
     <%= form.label :mascot %>
-    <%= form.text_field :mascot %>
-  </div>
-
-  <div class="field">
-    <%= form.label :coach_id %>
-    <%= form.number_field :coach_id %>
+    <%= form.text_field :mascot, :class => 'form-control' %>
   </div>
 
   <div class="actions">
-    <%= form.submit %>
+    <%= form.submit 'Submit', :class => 'btn btn-secondary' %>
+    <%= link_to 'Back', teams_path, :class => 'btn btn-danger', :style => 'color: white' %>
   </div>
 <% end %>

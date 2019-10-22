@@ -1,5 +1,3 @@
-<h1>New Player</h1>
+<h1>Add A New Player</h1>
 
-<%= render 'form', player: @player %>
-
-<%= link_to 'Back', players_path %>
+<%= render 'player_form', locals: {user: @user, team: @team} %>

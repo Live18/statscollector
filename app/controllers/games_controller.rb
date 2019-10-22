@@ -1,5 +1,7 @@
 class GamesController < ApplicationController
+  before_action :authenticate_user! 
   before_action :set_game, only: [:show, :edit, :update, :destroy]
+  before_action :allow_admin, only: [:new, :create, :update, :edit, :destroy]
 
   # GET /games
   # GET /games.json
@@ -10,11 +12,14 @@ class GamesController < ApplicationController
   # GET /games/1
   # GET /games/1.json
   def show
+    @home_team = Team.find(@game.home_team)
+    @away_team = Team.find(@game.away_team)
   end
 
   # GET /games/new
   def new
     @game = Game.new
+    @teams = Team.all
   end
 
   # GET /games/1/edit
@@ -70,5 +75,14 @@ class GamesController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def game_params
       params.require(:game).permit(:date, :home_team, :away_team, :scoreboard_id)
+    end
+
+    def allow_admin
+      unless current_user.admin
+        respond_to do |format|
+          format.html { redirect_to games_url, notice: 'You don\'t have permission to do that.' }
+          format.json { head :no_content } 
+        end
+      end
     end
 end

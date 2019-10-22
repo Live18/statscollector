@@ -10,28 +10,24 @@
       </ul>
     </div>
   <% end %>
+    <div class="field form-group">
+      <%= form.label :date %>
+      <%= form.date_field :date, as: :date, value: form.object.try(:strftime,"%m/%d/%Y"), class: 'form-control' %>
+    </div>
+    
+    <div class="dropdown" style="margin: 25px 0px">
+      <%= form.label :home_team %>
+      <%= form.select :home_team, Team.all.collect { |t| [ t.name, t.id ] }, {include_blank: true}, {:class => "form-control"} %>
+    </div>
 
-  <div class="field">
-    <%= form.label :date %>
-    <%= form.text_field :date %>
-  </div>
+    <div class="dropdown" style="margin: 25px, 0px">
+      <%= form.label :away_team %>
+      <%= form.select :away_team, Team.all.collect { |t| [ t.name, t.id ] }, {include_blank: true}, {:class => "form-control"} %>
+    </div>
 
-  <div class="field">
-    <%= form.label :home_team %>
-    <%= form.text_field :home_team %>
-  </div>
 
-  <div class="field">
-    <%= form.label :away_team %>
-    <%= form.text_field :away_team %>
-  </div>
-
-  <div class="field">
-    <%= form.label :scoreboard_id %>
-    <%= form.number_field :scoreboard_id %>
-  </div>
-
-  <div class="actions">
-    <%= form.submit %>
-  </div>
+    <div class="actions">
+        <%= form.submit 'Submit', :class => 'btn btn-secondary' %>
+        <%= link_to 'Back', root_path, :class => 'btn btn-danger', :style => 'color: white' %>
+    </div>
 <% end %>
