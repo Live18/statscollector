@@ -1,6 +1,6 @@
 class GamesController < ApplicationController
   before_action :authenticate_user! 
-  before_action :set_game, only: [:show, :edit, :update, :destroy]
+  before_action :set_game, only: [:show, :edit, :update, :destroy, :set_starters]
   before_action :allow_admin, only: [:new, :create, :update, :edit, :destroy]
 
   # GET /games
@@ -26,13 +26,24 @@ class GamesController < ApplicationController
   def edit
   end
 
+  def new_starters
+    
+  end
+
+  def set_starters
+    @game = Game.find(params[:game_id])
+    @team = Team.find(@game[request.query_parameters['team']])
+    @player_associations = UserAssociation.where(:team_id => @team.id, :role => "player")
+    @scoreboard = Scoreboard.find_by(:game_id => @game.id)
+  end
+
   # POST /games
   # POST /games.json
   def create
     @game = Game.new(game_params)
-
     respond_to do |format|
       if @game.save
+        @scoreboard = Scoreboard.create(:game_id => @game.id)
         format.html { redirect_to @game, notice: 'Game was successfully created.' }
         format.json { render :show, status: :created, location: @game }
       else
@@ -69,8 +80,18 @@ class GamesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_game
-      @game = Game.find(params[:id])
+      @game = Game.find(params[:id] || params[:game_id])
     end
+
+    # def set_team
+    #   coach_association = UserAssociation.find_by(:user_id => current_user.id, :role => "coach")
+    #   #if coach_association.nil?
+    #   #  redirect_to game_path(@game)
+    #   #  return
+    #   # end
+    #   @team = Team.find(params[:id] || params[:team_id])
+      
+    # end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def game_params

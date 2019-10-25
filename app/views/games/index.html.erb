@@ -8,7 +8,7 @@
         <th scope="col">Home team</th>
         <th scope="col">Away team</th>
         <th scope="col">Scoreboard</th>
-        <th scope="col" colspan="3"></th>
+        <th scope="col" colspan="4"></th>
       </tr>
     </thead>
 
@@ -22,11 +22,21 @@
           <td><%= link_to 'Show', game %></td>
           <td><%= link_to 'Edit', edit_game_path(game) %></td>
           <td><%= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          <td>
+            <% if  Team.find(game.home_team).is_coach?(current_user) %>
+              <%= link_to 'Set The Home Team Starters', game_set_starters_path(game_id:  game.id, team: 'home_team') %>
+            <% end %>
+            <% if  Team.find(game.away_team).is_coach?(current_user) %>
+              <%= link_to 'Set The Away Team Starters', game_set_starters_path(game_id:  game.id, team: 'away_team') %>
+            <% end %>
+          </td>
         </tr>
       <% end %>
     </tbody>
   </table>
 
-  <br>
+  <br/>
+  <% if current_user.admin %>
     <%= link_to 'New Game', new_game_path %>
+  <% end %>
 </div>

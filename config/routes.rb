@@ -1,9 +1,14 @@
 Rails.application.routes.draw do
   root 'games#index'
   resources :user_associations
-  resources :scoreboards
+  resources :scoreboards do
+    get '/set_starters' => 'scoreboards#new_starters'
+    post '/set_starters' => 'scoreboards#create_starters'
+  end
   resources :game_stats
-  resources :games
+  resources :games do
+    get '/set_starters' => 'games#set_starters'
+  end
   devise_for :users
   resources :players
   resources :teams do 

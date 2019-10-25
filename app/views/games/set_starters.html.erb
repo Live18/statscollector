@@ -1,0 +1,34 @@
+<%= form_for(@scoreboard, :method => "PUT") do |f| %>
+  <% if @scoreboard.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(scoreboard.errors.count, "error") %> prohibited this scoreboard from being saved:</h2>
+      <ul>
+      <% @scoreboard.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <%= f.label :current_players %>
+  <% @player_associations.each do |pa| %>
+    <div class="field form-group">
+      <% if @team.id == @game.home_team.to_i %>
+        <div><%= pa.user.email %></div>
+        <%= f.check_box :home_team_current_players, {multiple: true}, pa.id, nil  %>
+      <% end %>
+      <% if @team.id == @game.away_team.to_i %>
+        <div><%= pa.user.email %></div>
+        <%= f.check_box :away_team_current_players, {multiple: true}, pa.id, nil  %>
+      <% end %>
+      
+    </div>
+  <% end %>
+  <div class="actions">
+    <%= f.submit 'Submit', :class => 'btn btn-secondary' %>
+    <%= link_to 'Back', root_path, :class => 'btn btn-danger', :style => 'color: white' %>
+  </div>
+<% end %>
+<br />
+<br />
+<%= link_to 'Edit', edit_game_path(@game) %> |
+<%= link_to 'Back', games_path %>

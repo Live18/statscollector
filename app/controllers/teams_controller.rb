@@ -1,6 +1,6 @@
 class TeamsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_team, only: [:show, :edit, :update, :destroy]
+  before_action :set_team, only: [:show, :edit, :update, :destroy, :set_starters]
   before_action :set_team_invite_coach, only: [:new_coach, :create_coach]
   before_action :set_team_invite_player, only: [:new_player, :create_player]
   before_action :is_coach?, only: [:show]

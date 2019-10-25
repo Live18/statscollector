@@ -1,5 +1,8 @@
 class ScoreboardsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_scoreboard, only: [:show, :edit, :update, :destroy]
+  before_action :set_game, only: [:show, :edit, :update, :destroy, :set_game]
+  before_action :is_coach?, only: [:show]
 
   # GET /scoreboards
   # GET /scoreboards.json
@@ -42,11 +45,18 @@ class ScoreboardsController < ApplicationController
   def update
     respond_to do |format|
       if @scoreboard.update(scoreboard_params)
-        format.html { redirect_to @scoreboard, notice: 'Scoreboard was successfully updated.' }
-        format.json { render :show, status: :ok, location: @scoreboard }
+        redirect_back(fallback_location: root_path)
+        return
       else
-        format.html { render :edit }
-        format.json { render json: @scoreboard.errors, status: :unprocessable_entity }
+        if Team.find(@game.home_team).is_coach?(current_user)
+          format.html { redirect_to game_set_starters_path(@scoreboard.game_id, :team => scoreboard_params["home_team_current_players"].length > 0 ? 'home_team' : 'away_team'), :flash => { :danger => 'You must have 5 players' }}
+          format.json { render json: @scoreboard.errors, status: :unprocessable_entity }
+        else
+          binding.pry
+          format.html { redirect_to game_set_starters_path(@scoreboard.game_id, :team => scoreboard_params["away_team_current_players"].length > 0 ? 'home_team' : 'away_team'), :flash => { :danger => 'You must have 5 players' }}
+          format.json { render json: @scoreboard.errors, status: :unprocessable_entity }
+
+        end
       end
     end
   end
@@ -67,8 +77,17 @@ class ScoreboardsController < ApplicationController
       @scoreboard = Scoreboard.find(params[:id])
     end
 
+    def set_game
+      @game = Game.find(params[:id] || params[:game_id])
+    end
+
+    def is_coach?
+      @user_association = UserAssociation.find_by(:user_id => current_user.id, :team_id => @team.id)
+      @is_coach = @user_association && @user_association.role === 'coach'
+    end
+
     # Never trust parameters from the scary internet, only allow the white list through.
     def scoreboard_params
-      params.require(:scoreboard).permit(:home_team_score, :away_team_score, :home_team_timeouts_remaining, :away_team_timeouts_remining, :period, :home_team_fouls, :away_team_fouls, :posession_arrow)
+      params.require(:scoreboard).permit(:home_team_score, :away_team_score, :home_team_timeouts_remaining, :away_team_timeouts_remining, :period, :home_team_fouls, :away_team_fouls, :posession_arrow, :home_team_current_players => [], :away_team_current_players => [])
     end
 end
