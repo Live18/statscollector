@@ -1,5 +1,6 @@
 class GameStatsController < ApplicationController
-  before_action :set_game_stat, only: [:show, :edit, :update, :destroy]
+  # before_action :authenticate_user!
+  #before_action :set_game_stat, only: [:show, :edit, :update, :destroy]
 
   # GET /game_stats
   # GET /game_stats.json
@@ -51,6 +52,18 @@ class GameStatsController < ApplicationController
     end
   end
 
+  def upsert_game_stat
+    @upsert_data = JSON.parse(request.raw_post)
+    @existing_game_stat = GameStat.find_by(:team_id => @upsert_data["team_id"], :game_id => @upsert_data["game_id"], :user_id => @upsert_data["user_id"])
+    if @existing_game_stat.nil?
+      @existing_game_stat = GameStat.create(:team_id => @upsert_data["team_id"], :game_id => @upsert_data["game_id"], :user_id => @upsert_data["user_id"])
+    end
+    @upsert_data["stats"].each do |key, value|
+      @existing_game_stat[key] = @existing_game_stat[key].to_i + value;
+    end
+    @existing_game_stat.save
+  end
+
   # DELETE /game_stats/1
   # DELETE /game_stats/1.json
   def destroy
@@ -69,6 +82,6 @@ class GameStatsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def game_stat_params
-      params.require(:game_stat).permit(:game_id, :player_id, :pts, :reb, :ast, :stls)
+      params.require(:game_stat).permit(:game_id, :user_id, :team_id, :pts, :reb, :ast, :stls)
     end
 end

@@ -10,21 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_23_172411) do
+ActiveRecord::Schema.define(version: 2019_10_31_153059) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "game_stats", force: :cascade do |t|
     t.integer "game_id"
-    t.integer "player_id"
+    t.integer "user_id"
     t.integer "pts"
     t.integer "reb"
     t.integer "ast"
     t.integer "stls"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["player_id", "game_id"], name: "index_game_stats_on_player_id_and_game_id"
+    t.integer "team_id"
+    t.index ["user_id", "game_id"], name: "index_game_stats_on_user_id_and_game_id"
   end
 
   create_table "games", force: :cascade do |t|
@@ -62,6 +63,7 @@ ActiveRecord::Schema.define(version: 2019_10_23_172411) do
     t.string "home_team_current_players"
     t.string "away_team_current_players"
     t.integer "game_id"
+    t.boolean "roster_email_sent", default: false
   end
 
   create_table "teams", force: :cascade do |t|

@@ -4,8 +4,10 @@ Rails.application.routes.draw do
   resources :scoreboards do
     get '/set_starters' => 'scoreboards#new_starters'
     post '/set_starters' => 'scoreboards#create_starters'
+    get '/start_game' => 'scoreboards#start_game'
   end
   resources :game_stats
+  post '/game_stats/actions/upsert' => 'game_stats#upsert_game_stat'
   resources :games do
     get '/set_starters' => 'games#set_starters'
   end

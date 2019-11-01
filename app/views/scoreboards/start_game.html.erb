@@ -1,0 +1,30 @@
+<div style="margin-top: 60px">
+<h1>Start the game</h1>
+<div><%= link_to "Ready to start?", new_game_stat_path, class: 'button' %></div>
+
+<table class="table" style="margin-top: 20px">
+  <thead>
+    <tr>
+      <th scope="col"><%= @home_team.name %></th>
+      <th scope="col"><%= @away_team.name %></th>
+      <th scope="col" colspan="4"></th>
+    </tr>
+  </thead>
+</table>
+
+<div class='container'>
+  <div class="row">
+    <div class="col">
+      <% @scoreboard_ht.each_with_index do |user, i| %>
+        <div><%= user.email %>--<%= link_to 'Add Points', game_stats_actions_upsert_path, method: :post, class: 'button' %></div>
+      <br />
+      <% end %>
+    </div>
+    <div class='col'>
+      <% @scoreboard_at.each_with_index do |user, i| %>
+        <div><%= user.email %>--<%= link_to 'Add points', game_stats_actions_upsert_path, method: :post, class: 'button' %></div>
+        <br />
+      <% end %>
+    </div>
+  </div>
+</div>

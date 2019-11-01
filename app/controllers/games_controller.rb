@@ -44,6 +44,7 @@ class GamesController < ApplicationController
     respond_to do |format|
       if @game.save
         @scoreboard = Scoreboard.create(:game_id => @game.id)
+        @game.update(:scoreboard_id => @scoreboard.id)
         format.html { redirect_to @game, notice: 'Game was successfully created.' }
         format.json { render :show, status: :created, location: @game }
       else

@@ -1,7 +1,7 @@
 class ScoreboardsController < ApplicationController
-  before_action :authenticate_user!
+  #before_action :authenticate_user!
   before_action :set_scoreboard, only: [:show, :edit, :update, :destroy]
-  before_action :set_game, only: [:show, :edit, :update, :destroy, :set_game]
+  before_action :set_game, only: [:show, :edit, :destroy, :set_game, :rosters_confirmed]
   before_action :is_coach?, only: [:show]
 
   # GET /scoreboards
@@ -43,8 +43,15 @@ class ScoreboardsController < ApplicationController
   # PATCH/PUT /scoreboards/1
   # PATCH/PUT /scoreboards/1.json
   def update
+    @game = Game.find(@scoreboard.game_id)
     respond_to do |format|
       if @scoreboard.update(scoreboard_params)
+        home_team_current_players = JSON.parse(@scoreboard.home_team_current_players)
+        away_team_current_players = JSON.parse(@scoreboard.away_team_current_players)
+        if !@scoreboard.roster_email_sent && (home_team_current_players.length == 5  && away_team_current_players.length == 5)
+          UserMailer.with(team: @team, scoreboard: @scoreboard.id).confirmed_rosters_email.deliver_now
+          @scoreboard.update(roster_email_sent: true)
+        end
         redirect_back(fallback_location: root_path)
         return
       else
@@ -52,10 +59,8 @@ class ScoreboardsController < ApplicationController
           format.html { redirect_to game_set_starters_path(@scoreboard.game_id, :team => scoreboard_params["home_team_current_players"].length > 0 ? 'home_team' : 'away_team'), :flash => { :danger => 'You must have 5 players' }}
           format.json { render json: @scoreboard.errors, status: :unprocessable_entity }
         else
-          binding.pry
           format.html { redirect_to game_set_starters_path(@scoreboard.game_id, :team => scoreboard_params["away_team_current_players"].length > 0 ? 'home_team' : 'away_team'), :flash => { :danger => 'You must have 5 players' }}
           format.json { render json: @scoreboard.errors, status: :unprocessable_entity }
-
         end
       end
     end
@@ -69,6 +74,17 @@ class ScoreboardsController < ApplicationController
       format.html { redirect_to scoreboards_url, notice: 'Scoreboard was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def start_game
+    @scoreboard = Scoreboard.find(params[:scoreboard_id])
+    @game = Game.find(@scoreboard.game_id)
+    @home_team = Team.find(@game.home_team)
+    @away_team = Team.find(@game.away_team)
+    @home_team_current_players = JSON.parse(@scoreboard.home_team_current_players)
+    @away_team_current_players = JSON.parse(@scoreboard.away_team_current_players)
+    @scoreboard_ht = User.where(:id => @home_team_current_players)
+    @scoreboard_at = User.where(:id => @away_team_current_players)
   end
 
   private
