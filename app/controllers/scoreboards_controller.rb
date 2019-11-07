@@ -1,5 +1,5 @@
 class ScoreboardsController < ApplicationController
-  #before_action :authenticate_user!
+  before_action :authenticate_user!
   before_action :set_scoreboard, only: [:show, :edit, :update, :destroy]
   before_action :set_game, only: [:show, :edit, :destroy, :set_game, :rosters_confirmed]
   before_action :is_coach?, only: [:show]
@@ -85,6 +85,13 @@ class ScoreboardsController < ApplicationController
     @away_team_current_players = JSON.parse(@scoreboard.away_team_current_players)
     @scoreboard_ht = User.where(:id => @home_team_current_players)
     @scoreboard_at = User.where(:id => @away_team_current_players)
+  end
+
+  def add_points
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
 
   private

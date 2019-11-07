@@ -1,30 +1,225 @@
+<head>
+  <meta charset = "UTF-8">
+  <title>externalStyle.html</title>
+  <link rel = "stylesheet"
+     type = "text/css"
+     href = "scoreboards.scss" />
+</head>
 <div style="margin-top: 60px">
-<h1>Start the game</h1>
-<div><%= link_to "Ready to start?", new_game_stat_path, class: 'button' %></div>
+  <h1>Scoreboard</h1>
 
-<table class="table" style="margin-top: 20px">
-  <thead>
-    <tr>
-      <th scope="col"><%= @home_team.name %></th>
-      <th scope="col"><%= @away_team.name %></th>
-      <th scope="col" colspan="4"></th>
-    </tr>
-  </thead>
-</table>
+    <table class="table" style="margin-top: 20px">
+      <thead>
+        <tr>
+          <th scope="col"><%= @home_team.name %></th>
+          <th scope="col"><%= @away_team.name %></th>
+          <th scope="col" colspan="2"></th>
+        </tr>
+      </thead>
+    </table>
 
-<div class='container'>
-  <div class="row">
-    <div class="col">
-      <% @scoreboard_ht.each_with_index do |user, i| %>
-        <div><%= user.email %>--<%= link_to 'Add Points', game_stats_actions_upsert_path, method: :post, class: 'button' %></div>
+  <div class="container">
+      <div class="row">
+        <div class="col-md-5" align="center">
+          Home Score
+          <div>
+            <p class="points" id="homepts">0</p>
+          </div>
+        </div>
+        <div class="col-md-2" align="center">
+          <div>
+          Time remaining
+          </div>
+          <div id="time-clock" value="480">8:00</div>
+          <div>
+            <input type="button" id="startclock" value="Clock" onclick="clockControl();"/>
+          </div>
+        </div>
+        <div class="col-md-5" align="center">
+          Away Score
+          <div>
+            <p class="points" id="awaypts">0</p>
+          </div>
+        </div>
+      </div>
       <br />
-      <% end %>
+      <br />
+      <div class="row">
+      </div>
+      <div class="row" >
+        
+      </div>
+      <br />
+      <br />
+      <div class="row">
+        <div class="col-md-6 offset-md-3" align="center">
+          <button id="updatePeriod" onclick="updatePeriod()">Period</button> <br />
+          <span id="period" value="1">1</span><br />
+        </div>
+      </div>
+      <br />
+      <br />
+      <div class="row">
+        <div class="col-md-6 offset-md-3" align="center">
+          Possesion Arrow
+      </div>
     </div>
-    <div class='col'>
-      <% @scoreboard_at.each_with_index do |user, i| %>
-        <div><%= user.email %>--<%= link_to 'Add points', game_stats_actions_upsert_path, method: :post, class: 'button' %></div>
-        <br />
-      <% end %>
+    <br />
+    <br />
+    <div class="container">
+      <div class="row">
+        <div class="col" align="center">
+          Home Team Stats
+        </div>
+        <div class="col" align="center">
+          Away Team Stats
+        </div>
+      </div>
+      <br />
+      <div class="row">
+        <div class="col-md-5">
+          Assists: <span id="homeast">0</span><br />
+          Rebounds: <span id="homereb">0</span><br />
+          Steals: <span id="homestls">0</span><br />
+        </div>
+        <div class="col-md-2"></div>
+        <div class="col-md-5">
+          Assists: <span id="awayast">0</span><br />
+          Rebounds: <span id="awayreb">0</span><br />
+          Steals: <span id="awaystls">0</span><br />
+        </div>
+      </div>
+    </div>
+
+    <br />
+    <br />
+
+    <div class='container'>
+      <div class="row">
+        <div class="col-sm">
+          <% @scoreboard_ht.each_with_index do |user| %>
+            <div>
+              <%= user.email %>-
+                <button class="btn btn-info btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Add Points
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" onclick="addStats(<%= @home_team.id %>, <%=@scoreboard.game_id %>, <%= user.id %>, {pts: 1}, 'home')">Add 1 Point</a>
+                  <a class="dropdown-item" onclick="addStats(<%= @home_team.id %>, <%=@scoreboard.game_id %>, <%= user.id %>, {pts: 2}, 'home')">Add 2 Points</a>
+                  <a class="dropdown-item" onclick="addStats(<%= @home_team.id %>, <%=@scoreboard.game_id %>, <%= user.id %>, {pts: 3}, 'home')">Add 3 Points</a>
+                </div>-
+              <button class='btn btn-info btn-sm' style='color:#FFFFFF' onclick="addStats(<%= @home_team.id %>, <%=@scoreboard.game_id %>, <%= user.id %>, {reb: 1}, 'home')">Add Rebound</button>-
+              <button class='btn btn-info btn-sm' style='color:#FFFFFF' onclick="addStats(<%= @home_team.id %>, <%=@scoreboard.game_id %>, <%= user.id %>, {ast: 1}, 'home')">Add Assist</button>-
+              <button class='btn btn-info btn-sm' style='color:#FFFFFF' onclick="addStats(<%= @home_team.id %>, <%=@scoreboard.game_id %>, <%= user.id %>, {stls: 1}, 'home')">Add Steal</button>
+            </div>
+            <br />
+          <% end %>
+        </div>
+        <div class='col-sm'>
+          <% @scoreboard_at.each_with_index do |user| %>
+            <div><%= user.email %>-
+                <button class="btn btn-info btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Add Points
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" onclick="addStats(<%= @away_team.id %>, <%=@scoreboard.game_id %>, <%= user.id %>, {pts: 1}, 'away')">Add 1 Point</a>
+                  <a class="dropdown-item" onclick="addStats(<%= @away_team.id %>, <%=@scoreboard.game_id %>, <%= user.id %>, {pts: 2}, 'away')">Add 2 Points</a>
+                  <a class="dropdown-item" onclick="addStats(<%= @away_team.id %>, <%=@scoreboard.game_id %>, <%= user.id %>, {pts: 3}, 'away')">Add 3 Points</a>
+                </div>
+            -<button class='btn btn-info btn-sm' style='color:#FFFFFF' onclick="addStats(<%= @away_team.id %>, <%=@scoreboard.game_id %>, <%= user.id %>, {reb: 1}, 'away')">Add Rebound</button>-
+            <button class='btn btn-info btn-sm' style='color:#FFFFFF' onclick="addStats(<%= @away_team.id %>, <%=@scoreboard.game_id %>, <%= user.id %>, {ast: 1}, 'away')">Add Assist</button>-
+            <button class='btn btn-info btn-sm' style='color:#FFFFFF' onclick="addStats(<%= @away_team.id %>, <%=@scoreboard.game_id %>, <%= user.id %>, {stls: 1}, 'away')">Add Steal</button>
+           </div>
+          <br />
+        <% end %>
+      </div>
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+  let clockRunning;
+
+  function updateScoreboardClock(){ 
+    var timeElement = document.getElementById('time-clock');
+    var currentTimeInSeconds = parseInt(timeElement.getAttribute('value'));
+    var nextTimeInSeconds = currentTimeInSeconds - 1
+    timeElement.setAttribute('value', nextTimeInSeconds);
+    var date = new Date(null);
+    date.setSeconds(nextTimeInSeconds); // specify value for SECONDS here
+    var updatedTime = date.toISOString().substr(14, 5);
+    timeElement.innerHTML = updatedTime;
+    if (updatedTime <= "07:50"){
+      clearInterval(clockRunning);
+    }
+  };
+
+  function clockControl() {
+    if (clockRunning){
+      clearInterval(clockRunning);
+      document.getElementById('startclock').style.backgroundColor = "#00ff00"; //green
+      clockRunning = null;
+    }
+    else {
+      clockRunning = setInterval(updateScoreboardClock, 1000);
+      document.getElementById('startclock').style.backgroundColor = "#ff0000"; // red
+    }
+
+  };
+
+  function addStats(teamId, gameId, userId, stats, teamType) {
+    let statObject = {
+      "team_id": teamId,
+      "game_id": gameId,
+      "user_id": userId,
+      stats
+    }
+    upsertStats(statObject, teamType);
+
+  };
+
+  function upsertStats(stats, teamType) {
+    const url = "http://localhost:3000/game_stats/actions/upsert";
+    fetch(url, {
+        method : "POST",
+        // body: new FormData(document.getElementById("inputform")),
+        // -- or --
+        body : JSON.stringify(stats)
+    }).then((response) => {
+      // Update the HTML with the stats
+        modifyScoreboard(stats, teamType)
+    }).then(
+        html => console.log(html)
+    );
+  };
+
+  function modifyScoreboard(stats, teamType) {
+    Object.keys(stats.stats).map((stat) => {
+      let currentStat = parseInt(document.getElementById(`${teamType}${stat}`).innerHTML);
+      let newStatValue = currentStat + stats.stats[stat];
+      document.getElementById(`${teamType}${stat}`).innerHTML = newStatValue;
+    })
+  }
+
+  function updatePeriod(){
+    var periodElement = document.getElementById('period');
+    var nextPeriod = parseInt(periodElement.getAttribute('value')) + 1;
+    if (nextPeriod > 4){
+      periodElement.innerHTML = 1;
+      periodElement.setAttribute('value', 1);
+
+    }
+    else {
+      periodElement.innerHTML = nextPeriod;
+      periodElement.setAttribute('value', nextPeriod);
+    }
+    document.getElementById('time-clock').innerHTML = "08:00";
+    var timeElement = document.getElementById('time-clock');
+    timeElement.setAttribute('value', 480);
+    timeElement.innerHTML = "08:00"
+    document.getElementById('startclock').style.backgroundColor = "#00ff00";
+    clockRunning = null;
+ };
+
+
+</script>

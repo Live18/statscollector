@@ -62,6 +62,7 @@ class GameStatsController < ApplicationController
       @existing_game_stat[key] = @existing_game_stat[key].to_i + value;
     end
     @existing_game_stat.save
+    return @existing_game_stat
   end
 
   # DELETE /game_stats/1
