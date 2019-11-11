@@ -61,7 +61,7 @@
       <br />
       <div class="row">
         <div class="col-md-6 offset-md-3" align="center">
-          Possesion Arrow
+          <button id="arrowDIV" onclick="switchArrow()">&lt;</button>
       </div>
     </div>
     <br />
@@ -78,15 +78,19 @@
       <br />
       <div class="row">
         <div class="col-md-5">
+          <input type="button" id="hometimeoutbutton" value="Call Timeout" onclick="callTimeout('home')"><br />
           Assists: <span id="homeast">0</span><br />
           Rebounds: <span id="homereb">0</span><br />
           Steals: <span id="homestls">0</span><br />
+          Timeouts Remining: <span value="3" id="hometo">3</span>
         </div>
         <div class="col-md-2"></div>
         <div class="col-md-5">
+          <input type="button" id="awaytimeoutbutton" value="Call Timeout" onclick="callTimeout('away')"><br />
           Assists: <span id="awayast">0</span><br />
           Rebounds: <span id="awayreb">0</span><br />
           Steals: <span id="awaystls">0</span><br />
+          Timeouts Remining: <span value="3" id="awayto">3</span>
         </div>
       </div>
     </div>
@@ -149,7 +153,7 @@
     date.setSeconds(nextTimeInSeconds); // specify value for SECONDS here
     var updatedTime = date.toISOString().substr(14, 5);
     timeElement.innerHTML = updatedTime;
-    if (updatedTime <= "07:50"){
+    if (updatedTime <= "00:00"){
       clearInterval(clockRunning);
     }
   };
@@ -185,10 +189,10 @@
         // body: new FormData(document.getElementById("inputform")),
         // -- or --
         body : JSON.stringify(stats)
-    }).then((response) => {
+    }).then((response) => 
       // Update the HTML with the stats
         modifyScoreboard(stats, teamType)
-    }).then(
+    ).then(
         html => console.log(html)
     );
   };
@@ -219,7 +223,41 @@
     timeElement.innerHTML = "08:00"
     document.getElementById('startclock').style.backgroundColor = "#00ff00";
     clockRunning = null;
- };
+ }
+
+  function switchArrow() {
+    var currentArrow = document.getElementById("arrowDIV").innerHTML;
+    document.getElementById("arrowDIV").innerHTML = currentArrow === '&lt;' ?  '&gt;' : '&lt;'; 
+  };
+  function callHomeTimeout() {
+    var homeTo = document.getElementById('hometo');
+    clearInterval(clockRunning);
+    document.getElementById('startclock').style.backgroundColor = "#00ff00"; // green
+    clockRunning = null;
+    var currentTo = parseInt(homeTo.getAttribute('value'));
+    var newTo = currentTo - 1
+    homeTo.setAttribute("value", newTo);
+    homeTo.innerHTML = newTo;
+    if (newTo === 0){
+      document.getElementById("button").disabled = true;
+    }
+  };
+
+  function callTimeout(team) {
+    debugger;
+    var changeTO = team === "home" ? "hometo" : "awayto"
+    var toElement = document.getElementById(changeTO);
+    clearInterval(clockRunning);
+    document.getElementById('startclock').style.backgroundColor = "#00ff00"; // green
+    clockRunning = null;
+    var currentTo = parseInt(toElement.getAttribute('value'));
+    var newTo = currentTo - 1
+    toElement.setAttribute("value", newTo);
+    toElement.innerHTML = newTo;
+      if (newTo === 0){
+        document.getElementById(`${team}timeoutbutton`).disabled = true;
+      } 
+  };
 
 
 </script>
