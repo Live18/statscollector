@@ -81,10 +81,12 @@ class ScoreboardsController < ApplicationController
     @game = Game.find(@scoreboard.game_id)
     @home_team = Team.find(@game.home_team)
     @away_team = Team.find(@game.away_team)
+    @all_home_players = UserAssociation.where(:team_id => @home_team.id, :role => "player")
+    @all_away_players = UserAssociation.where(:team_id => @away_team.id, :role => "player")
     @home_team_current_players = JSON.parse(@scoreboard.home_team_current_players)
     @away_team_current_players = JSON.parse(@scoreboard.away_team_current_players)
-    @scoreboard_ht = User.where(:id => @home_team_current_players)
-    @scoreboard_at = User.where(:id => @away_team_current_players)
+    @home_team_stats = GameStat.where(:game_id => @game.id, :user_id => @all_home_players.pluck(:user_id))
+    @away_team_stats = GameStat.where(:game_id => @game.id, :user_id => @all_away_players.pluck(:user_id))
   end
 
   def add_points
