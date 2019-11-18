@@ -87,6 +87,7 @@ class ScoreboardsController < ApplicationController
     @away_team_current_players = JSON.parse(@scoreboard.away_team_current_players)
     @home_team_stats = GameStat.where(:game_id => @game.id, :user_id => @all_home_players.pluck(:user_id))
     @away_team_stats = GameStat.where(:game_id => @game.id, :user_id => @all_away_players.pluck(:user_id))
+    @complete_game = Game.find(@scoreboard.game_id)
   end
 
   def add_points

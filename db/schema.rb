@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_12_183805) do
+ActiveRecord::Schema.define(version: 2019_11_15_163248) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(version: 2019_11_12_183805) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "roster_reminder_email_sent", default: true
+    t.boolean "is_complete", default: false
     t.index ["home_team", "away_team"], name: "index_games_on_home_team_and_away_team"
   end
 
@@ -72,6 +73,8 @@ ActiveRecord::Schema.define(version: 2019_11_12_183805) do
     t.string "mascot"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "wins", default: 0
+    t.integer "losses", default: 0
   end
 
   create_table "user_associations", force: :cascade do |t|

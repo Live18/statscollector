@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   post '/game_stats/actions/upsert' => 'game_stats#upsert_game_stat'
   resources :games do
     get '/set_starters' => 'games#set_starters'
+    put '/actions/complete' => 'games#complete'
   end
   devise_for :users
   resources :players

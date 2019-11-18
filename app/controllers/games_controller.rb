@@ -1,6 +1,6 @@
 class GamesController < ApplicationController
   before_action :authenticate_user! 
-  before_action :set_game, only: [:show, :edit, :update, :destroy, :set_starters]
+  before_action :set_game, only: [:show, :edit, :update, :destroy, :set_starters, :complete]
   before_action :allow_admin, only: [:new, :create, :update, :edit, :destroy]
 
   # GET /games
@@ -76,6 +76,29 @@ class GamesController < ApplicationController
       format.html { redirect_to games_url, notice: 'Game was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def complete
+    @home_team = Team.find(@game.home_team)
+    @away_team = Team.find(@game.away_team)
+    @complete_game = Game.find(@game.id)
+    @scoreboard = Scoreboard.find_by(:game_id => @game.id)
+    @all_home_players = UserAssociation.where(:team_id => @scoreboard.game.home_team, :role => "player")
+    @all_away_players = UserAssociation.where(:team_id => @scoreboard.game.away_team, :role => "player")
+    @home_team_stats = GameStat.where(:game_id => @scoreboard.game_id, :user_id => @all_home_players.pluck(:user_id))
+    @away_team_stats = GameStat.where(:game_id => @scoreboard.game_id, :user_id => @all_away_players.pluck(:user_id))
+    @home_final_score = @home_team_stats.pluck(:pts).reduce(0) {|result, current| result += current}
+    @away_final_score = @away_team_stats.pluck(:pts).reduce(0) {|result, current| result += current}
+    if @home_final_score > @away_final_score
+      @home_team.wins += 1
+      @away_team.losses += 1
+    else
+      @home_team.losses += 1
+      @away_team.wins += 1
+    end
+    @home_team.save
+    @away_team.save
+    @complete_game.is_complete = true
   end
 
   private

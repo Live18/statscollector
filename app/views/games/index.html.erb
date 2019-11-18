@@ -6,9 +6,10 @@
       <tr>
         <th scope="col">Date</th>
         <th scope="col">Home team</th>
+        <th scope="col">Record</th>
         <th scope="col">Away team</th>
-        <th scope="col">Scoreboard</th>
-        <th scope="col" colspan="4"></th>
+        <th scope="col">Record</th>
+        <th scope="col" colspan="8"></th>
       </tr>
     </thead>
 
@@ -17,8 +18,9 @@
         <tr>
           <td><%= game.date %></td>
           <td><%= Team.find(game.home_team).name %></td>
+          <td><%= Team.find(game.home_team).wins %>-<%= Team.find(game.home_team).losses %></td>
           <td><%= Team.find(game.away_team).name %></td>
-          <td><%= game.scoreboard_id %></td>
+          <td><%= Team.find(game.away_team).wins %>-<%= Team.find(game.away_team).losses %></td>
           <td><%= link_to 'Show', game %></td>
           <td><%= link_to 'Edit', edit_game_path(game) %></td>
           <td><%= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' } %></td>

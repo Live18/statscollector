@@ -36,7 +36,7 @@
         </div>
         <br />
         <div>
-          <button type="button" id="endgame" onclick="endGame();">End The Game</button>
+          <%= link_to 'End Game', game_actions_complete_path(@scoreboard.game_id), {method: 'PUT', :id => 'endgame'} %>
         </div>
       </div>
       <div class="col-md-5" align="center">
@@ -48,20 +48,16 @@
     </div>
     <br />
     <br />
-    <div class="row">
-    </div>
-    <div class="row">
-    </div>
-      <br />
-      <br />
+    <br />
+    <br />
     <div class="row">
       <div class="col-md-6 offset-md-3" align="center">
         <button id="updatePeriod" onclick="updatePeriod()">Period</button> <br />
         <span id="period" value="1">1</span><br />
       </div>
     </div>
-      <br />
-      <br />
+    <br />
+    <br />
     <div class="row">
       <div class="col-md-6 offset-md-3" align="center">
         <button id="arrowDIV" onclick="switchArrow()">&lt;</button>
@@ -69,79 +65,77 @@
     </div>
     <br />
     <br />
-    <div class="container">
-      <div class="row">
-        <div class="col" align="center">
-          Home Team Stats
-        </div>
-        <div class="col" align="center">
-          Away Team Stats
-        </div>
+    <div class="row">
+      <div class="col" align="center">
+        Home Team Stats
       </div>
-      <br />
-      <div class="row">
-        <div class="col-md-5">
-          <input type="button" id="hometimeoutbutton" value="Call Timeout" onclick="callTimeout('home')"><br />
-          Assists: <span id="homeast" ><%= @home_team_stats.pluck(:ast).reduce(0) {|result, current| result += current } %></span><br />
-          Rebounds: <span id="homereb"><%= @home_team_stats.pluck(:reb).reduce(0) {|result, current| result += current } %></span><br />
-          Steals: <span id="homestls"><%= @home_team_stats.pluck(:stls).reduce(0) {|result, current| result += current } %></span><br />
-          Timeouts Remining: <span value="3" id="hometo">3</span>
-        </div>
-        <div class="col-md-2"></div>
-        <div class="col-md-5">
-          <input type="button" id="awaytimeoutbutton" value="Call Timeout" onclick="callTimeout('away')"><br />
-          Assists: <span id="awayast" ><%= @away_team_stats.pluck(:ast).reduce(0) {|result, current| result += current } %></span><br />
-          Rebounds: <span id="awayreb"><%= @away_team_stats.pluck(:reb).reduce(0) {|result, current| result += current } %></span><br />
-          Steals: <span id="awaystls"><%= @away_team_stats.pluck(:stls).reduce(0) {|result, current| result += current } %></span><br />
-          Timeouts Remining: <span value="3" id="awayto">3</span>
-        </div>
+      <div class="col" align="center">
+        Away Team Stats
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-md-5">
+        <input type="button" id="hometimeoutbutton" value="Call Timeout" onclick="callTimeout('home')"><br />
+        Assists: <span id="homeast" ><%= @home_team_stats.pluck(:ast).reduce(0) {|result, current| result += current } %></span><br />
+        Rebounds: <span id="homereb"><%= @home_team_stats.pluck(:reb).reduce(0) {|result, current| result += current } %></span><br />
+        Steals: <span id="homestls"><%= @home_team_stats.pluck(:stls).reduce(0) {|result, current| result += current } %></span><br />
+        Timeouts Remining: <span value="3" id="hometo">3</span>
+      </div>
+      <div class="col-md-2"></div>
+      <div class="col-md-5">
+        <input type="button" id="awaytimeoutbutton" value="Call Timeout" onclick="callTimeout('away')"><br />
+        Assists: <span id="awayast" ><%= @away_team_stats.pluck(:ast).reduce(0) {|result, current| result += current } %></span><br />
+        Rebounds: <span id="awayreb"><%= @away_team_stats.pluck(:reb).reduce(0) {|result, current| result += current } %></span><br />
+        Steals: <span id="awaystls"><%= @away_team_stats.pluck(:stls).reduce(0) {|result, current| result += current } %></span><br />
+        Timeouts Remining: <span value="3" id="awayto">3</span>
       </div>
     </div>
 
     <br />
     <br />
 
-    <div class='container'>
-      <div class="row">
-        <div class="col-sm">
-          <% @all_home_players.each_with_index do |ht_association| %>
-            <div>
-              <%= ht_association.user.email %>-
-                <button class="btn btn-info btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Add Points
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <a class="dropdown-item" onclick="addStats(<%= @home_team.id %>, <%=@scoreboard.game_id %>, <%= ht_association.user.id %>, {pts: 1}, 'home')">Add 1 Point</a>
-                  <a class="dropdown-item" onclick="addStats(<%= @home_team.id %>, <%=@scoreboard.game_id %>, <%= ht_association.user.id %>, {pts: 2}, 'home')">Add 2 Points</a>
-                  <a class="dropdown-item" onclick="addStats(<%= @home_team.id %>, <%=@scoreboard.game_id %>, <%= ht_association.user.id %>, {pts: 3}, 'home')">Add 3 Points</a>
-                </div>-
-              <button class='btn btn-info btn-sm' style='color:#FFFFFF' onclick="addStats(<%= @home_team.id %>, <%=@scoreboard.game_id %>, <%= ht_association.user.id %>, {reb: 1}, 'home')">Add Rebound</button>-
-              <button class='btn btn-info btn-sm' style='color:#FFFFFF' onclick="addStats(<%= @home_team.id %>, <%=@scoreboard.game_id %>, <%= ht_association.user.id %>, {ast: 1}, 'home')">Add Assist</button>-
-              <button class='btn btn-info btn-sm' style='color:#FFFFFF' onclick="addStats(<%= @home_team.id %>, <%=@scoreboard.game_id %>, <%= ht_association.user.id %>, {stls: 1}, 'home')">Add Steal</button>
-            </div>
-            <br />
-          <% end %>
-        </div>
-        <div class='col-sm'>
-          <% @all_away_players.each_with_index do |at_association| %>
-            <div>
-              <div><%= at_association.user.email %>-</div>
+    <div class="row">
+      <div class="col-sm">
+        <% @all_home_players.each_with_index do |ht_association| %>
+          <div>
+            <%= ht_association.user.email %>-
               <button class="btn btn-info btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Add Points
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" onclick="addStats(<%= @away_team.id %>, <%=@scoreboard.game_id %>, <%= at_association.user.id %>, {pts: 1}, 'away')">Add 1 Point</a>
-                <a class="dropdown-item" onclick="addStats(<%= @away_team.id %>, <%=@scoreboard.game_id %>, <%= at_association.user.id %>, {pts: 2}, 'away')">Add 2 Points</a>
-                <a class="dropdown-item" onclick="addStats(<%= @away_team.id %>, <%=@scoreboard.game_id %>, <%= at_association.user.id %>, {pts: 3}, 'away')">Add 3 Points</a>
-              </div>
-              -<button class='btn btn-info btn-sm' style='color:#FFFFFF' onclick="addStats(<%= @away_team.id %>, <%=@scoreboard.game_id %>, <%= at_association.user.id %>, {reb: 1}, 'away')">Add Rebound</button>-
-              <button class='btn btn-info btn-sm' style='color:#FFFFFF' onclick="addStats(<%= @away_team.id %>, <%=@scoreboard.game_id %>, <%= at_association.user.id %>, {ast: 1}, 'away')">Add Assist</button>-
-              <button class='btn btn-info btn-sm' style='color:#FFFFFF' onclick="addStats(<%= @away_team.id %>, <%=@scoreboard.game_id %>, <%= at_association.user.id %>, {stls: 1}, 'away')">Add Steal</button>
-            </div>
-            <br />
-          <% end %>
-        </div>
+                <a class="dropdown-item" onclick="addStats(<%= @home_team.id %>, <%=@scoreboard.game_id %>, <%= ht_association.user.id %>, {pts: 1}, 'home')">Add 1 Point</a>
+                <a class="dropdown-item" onclick="addStats(<%= @home_team.id %>, <%=@scoreboard.game_id %>, <%= ht_association.user.id %>, {pts: 2}, 'home')">Add 2 Points</a>
+                <a class="dropdown-item" onclick="addStats(<%= @home_team.id %>, <%=@scoreboard.game_id %>, <%= ht_association.user.id %>, {pts: 3}, 'home')">Add 3 Points</a>
+              </div>-
+            <button class='btn btn-info btn-sm' style='color:#FFFFFF' onclick="addStats(<%= @home_team.id %>, <%=@scoreboard.game_id %>, <%= ht_association.user.id %>, {reb: 1}, 'home')">Add Rebound</button>-
+            <button class='btn btn-info btn-sm' style='color:#FFFFFF' onclick="addStats(<%= @home_team.id %>, <%=@scoreboard.game_id %>, <%= ht_association.user.id %>, {ast: 1}, 'home')">Add Assist</button>-
+            <button class='btn btn-info btn-sm' style='color:#FFFFFF' onclick="addStats(<%= @home_team.id %>, <%=@scoreboard.game_id %>, <%= ht_association.user.id %>, {stls: 1}, 'home')">Add Steal</button>
+          </div>
+          <br />
+        <% end %>
+        <br />
+        <br />
       </div>
+      <div class='col-sm'>
+        <% @all_away_players.each_with_index do |at_association| %>
+          <div>
+            <div><%= at_association.user.email %>-</div>
+            <button class="btn btn-info btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Add Points
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item" onclick="addStats(<%= @away_team.id %>, <%=@scoreboard.game_id %>, <%= at_association.user.id %>, {pts: 1}, 'away')">Add 1 Point</a>
+              <a class="dropdown-item" onclick="addStats(<%= @away_team.id %>, <%=@scoreboard.game_id %>, <%= at_association.user.id %>, {pts: 2}, 'away')">Add 2 Points</a>
+              <a class="dropdown-item" onclick="addStats(<%= @away_team.id %>, <%=@scoreboard.game_id %>, <%= at_association.user.id %>, {pts: 3}, 'away')">Add 3 Points</a>
+            </div>
+            -<button class='btn btn-info btn-sm' style='color:#FFFFFF' onclick="addStats(<%= @away_team.id %>, <%=@scoreboard.game_id %>, <%= at_association.user.id %>, {reb: 1}, 'away')">Add Rebound</button>-
+            <button class='btn btn-info btn-sm' style='color:#FFFFFF' onclick="addStats(<%= @away_team.id %>, <%=@scoreboard.game_id %>, <%= at_association.user.id %>, {ast: 1}, 'away')">Add Assist</button>-
+            <button class='btn btn-info btn-sm' style='color:#FFFFFF' onclick="addStats(<%= @away_team.id %>, <%=@scoreboard.game_id %>, <%= at_association.user.id %>, {stls: 1}, 'away')">Add Steal</button>
+          </div>
+          <br />
+        <% end %>
+      </div> 
     </div>
   </div>
 </div>
@@ -232,7 +226,7 @@
     debugger;
     var finalHomeScore = '<%= @home_team_stats.pluck(:pts).reduce(0) {|result, current| result += current } %>';
     var finalAwayScore = '<%= @away_team_stats.pluck(:pts).reduce(0) {|result, current| result += current } %>';
-    if (nextPeriod >= 4 && timeElement.innerHTML === "0:00" && finalHomeScore != finalAwayScore) {
+    if (nextPeriod > 4 && finalHomeScore != finalAwayScore) {
       document.getElementById('endgame').disabled = false;
     }
  }
@@ -242,7 +236,17 @@
     document.getElementById("arrowDIV").innerHTML = currentArrow === '&lt;' ?  '&gt;' : '&lt;'; 
   };
   function endGame() {
-    
+    var finalHomeScore = '<%= @home_team_stats.pluck(:pts).reduce(0) {|result, current| result += current } %>';
+    var finalAwayScore = '<%= @away_team_stats.pluck(:pts).reduce(0) {|result, current| result += current } %>';
+    debugger;
+    if (finalHomeScore > finalAwayScore){
+      '<%= Team.find(@game.home_team).wins  + 1 %>'
+      '<%= Team.find(@game.away_team).losses  + 1 %>'
+    }
+    else {
+     '<%= Team.find(@game.away_team).wins + 1 %>'
+     '<%= Team.find(@game.home_team).losses  + 1 %>' 
+    }
   };
 
   function callTimeout(team) {
